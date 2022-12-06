@@ -27,3 +27,4 @@ wait
 
 cd $OUTPAR
 ./$COLLSH $1
+

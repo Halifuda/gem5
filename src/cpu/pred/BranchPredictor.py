@@ -100,6 +100,25 @@ class BiModeBP(BranchPredictor):
     choicePredictorSize = Param.Unsigned(8192, "Size of choice predictor")
     choiceCtrBits = Param.Unsigned(2, "Bits of choice counters")
 
+class MyPerceptronBP(BranchPredictor):
+    type = 'MyPerceptronBP'
+    cxx_class = 'gem5::branch_prediction::MyPerceptronBP'
+    cxx_header = "cpu/pred/mypbp.hh"
+
+    globalHistoryBits = Param.Unsigned(32, "Bits of global history register")
+    perceptronsSize = Param.Unsigned(8092, "Size of perceptron predictor")
+    initWeight = Param.Int64(0, "Initial weight")
+
+class BannedBP(BranchPredictor):
+    type = 'BannedBP'
+    cxx_class = 'gem5::branch_prediction::BannedBP'
+    cxx_header = "cpu/pred/banned.hh"
+
+class MySimpleBP(BranchPredictor):
+    type = 'MySimpleBP'
+    cxx_class = 'gem5::branch_prediction::MySimpleBP'
+    cxx_header = "cpu/pred/mysimplebp.hh"
+
 class TAGEBase(SimObject):
     type = 'TAGEBase'
     cxx_class = 'gem5::branch_prediction::TAGEBase'

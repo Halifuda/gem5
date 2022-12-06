@@ -180,6 +180,30 @@ class StridePrefetcher(QueuedPrefetcher):
     table_replacement_policy = Param.BaseReplacementPolicy(RandomRP(),
         "Replacement policy of the PC table")
 
+class MySamplePrefetcher(QueuedPrefetcher):
+    type = 'MySamplePrefetcher'
+    cxx_class = 'gem5::prefetch::MySample'
+    cxx_header = "mem/cache/prefetch/mysamp.hh"
+
+    confidence_counter_bits = Param.Unsigned(3,
+        "Number of bits of the confidence counter")
+    initial_confidence = Param.Unsigned(4,
+        "Starting confidence of new entries")
+    confidence_threshold = Param.Percent(50,
+        "Prefetch generation confidence threshold")
+    degree = Param.Int(4, "Number of prefetches to generate")
+    cache_num_blocks = Param.Int(4096, "Number of blocks in parent cache")
+    sampler_assoc = Param.Int(4, "Associativity of the sampler")
+    sampler_entries = Param.MemorySize("128", "Number of entries of the sampler")
+    pred_entries = Param.Unsigned(1024, "Number of entries of the predict table")
+    sampler_indexing_policy = Param.BaseIndexingPolicy(
+        SetAssociative(entry_size = 1,
+        assoc = Parent.sampler_assoc, size = Parent.sampler_entries),
+        "Indexing policy of the sampler")
+    sampler_replacement_policy = Param.BaseReplacementPolicy(RandomRP(),
+        "Replacement policy of the sampler")
+    samp_frac_bits = Param.Unsigned(5, "Fraction of cache/sampler, in bit form.")
+
 class TaggedPrefetcher(QueuedPrefetcher):
     type = 'TaggedPrefetcher'
     cxx_class = 'gem5::prefetch::Tagged'

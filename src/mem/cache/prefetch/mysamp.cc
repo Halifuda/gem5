@@ -20,8 +20,8 @@ namespace prefetch {
 
 void MySample::SampleEntry::invalidate() {
     TaggedEntry::invalidate();
-    lastAddr = 0;
-    signature = 0;
+    // lastAddr = 0;
+    // signature = 0;
 }
 
 MySample::MySample(const MySamplePrefetcherParams &params)
@@ -29,7 +29,7 @@ MySample::MySample(const MySamplePrefetcherParams &params)
       initConfidence(params.confidence_counter_bits, params.initial_confidence),
       threshConf(params.confidence_threshold / 100.0),
       degree(params.degree),
-      cacheNumBlocks(params.cache_num_blocks),
+      cacheNumSets(params.cache_num_sets),
       samplerInfo(params.sampler_assoc, params.sampler_entries,
                   params.sampler_indexing_policy,
                   params.sampler_replacement_policy),
@@ -43,12 +43,12 @@ MySample::MySample(const MySamplePrefetcherParams &params)
         fatal("[MySamplePrefetcher] invalid sampler entry number.");
     if (!isPowerOf2(params.pred_entries))
         fatal("[MySamplePrefetcher] invalid predict table entry number.");
-    if (floorLog2(cacheNumBlocks / samplerInfo.numEntries) != sampFracBits)
+    if (floorLog2(cacheNumSets / (samplerInfo.numEntries / samplerInfo.assoc)) != sampFracBits)
         fatal(
             "[MySamplePrefetcher] invalid sample fraction bits "
             "(blksize:%d, "
-            "blk: %d, samp: %d).",
-            blkSize, cacheNumBlocks, samplerInfo.numEntries);
+            "cache: %d, samp: %d).",
+            blkSize, cacheNumSets, samplerInfo.numEntries);
     inform("[MySamplePrefetcher] blksize: %d, lblksize: %d", blkSize, lBlkSize);
 }
 
@@ -76,9 +76,9 @@ void MySample::predUpdate(const Addr sign, const Addr last_addr,
                           const Addr this_addr, bool hit_or_evict) {
     uint64_t index = sign & signMask;
     if (hit_or_evict) {
-        PredTable[index].confidence++;
-    } else {
         PredTable[index].confidence--;
+    } else {
+        PredTable[index].confidence++;
         PredTable[index].prefetchOffset = this_addr - last_addr;
     }
 }
@@ -109,14 +109,20 @@ void MySample::calculatePrefetch(const PrefetchInfo &pfi,
             // Insert new entry's data
             entry->lastAddr = pf_addr;
             entry->signature = pc;
-            Sampler.insertEntry(sidx, is_secure, entry);
+            Sampler.insertEntry(sidx, is_secure, entry);        
+            Sampler.accessEntry(entry);
+            /* now entry exists, update sampler */
+            entry->signature = pc;
+            entry->lastAddr = pf_addr;
+            // do not update PT
+        } else {
+            Sampler.accessEntry(entry);
+            entry->signature = pc;
+            entry->lastAddr = pf_addr;
+            // update the predict table
+            predUpdate(pc, entry->lastAddr, pf_addr, true);
         }
-        Sampler.accessEntry(entry);
-        /* now entry exists, update sampler */
-        entry->signature = pc;
-        entry->lastAddr = pf_addr;
-        // update the predict table
-        predUpdate(pc, entry->lastAddr, pf_addr, true);
+
         // predict & prefetch
         prefetch(pc, pf_addr, addresses);
     }

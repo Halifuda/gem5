@@ -38,7 +38,7 @@ class MySample : public Queued {
 
     struct PredictEntry {
         SatCounter8 confidence;
-        Addr prefetchOffset;
+        int64_t prefetchOffset;
 
         PredictEntry(const SatCounter8& sc)
             : confidence(sc), prefetchOffset(0) {}
@@ -48,7 +48,7 @@ class MySample : public Queued {
     double threshConf;
     int degree;
 
-    int cacheNumBlocks;
+    int cacheNumSets;
 
     const struct PCTableInfo {
         const int assoc;

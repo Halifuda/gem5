@@ -41,10 +41,13 @@ class L2Cache(Cache):
 
 
 class MySamp(MySamplePrefetcher):
-    cache_num_blocks = 512
-    sampler_entries = '32'
-    sampler_assoc = 1
+    cache_num_sets = 512
+    sampler_entries = '128'
+    sampler_assoc = 4
     samp_frac_bits = 4
+    confidence_counter_bits = 3
+    initial_confidence = 5
+    degree = 4
     sampler_replacement_policy = LRURP()
 
 class MySP(SignaturePathPrefetcher):

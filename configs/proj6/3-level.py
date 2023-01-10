@@ -38,25 +38,25 @@ root.system.l2cache = L2Cache()
 root.system.l2bus = L2XBar()
 
 if options.cachec == "spf":
-    root.system.cpu.dcache.prefetcher = MySP()
-    root.system.cpu.dcache.prefetcher.prefetch_on_access = True
-    root.system.cpu.dcache.prefetch_on_access = True
-    root.system.cpu.dcache.prefetch_on_pf_hit = True
+    root.system.l2cache.prefetcher = MySP()
+    root.system.l2cache.prefetcher.prefetch_on_access = True
+    root.system.l2cache.prefetch_on_access = True
+    root.system.l2cache.prefetch_on_pf_hit = True
 elif options.cachec == "dcp":
-    root.system.cpu.dcache.prefetcher = DCPTPrefetcher()
-    root.system.cpu.dcache.prefetcher.prefetch_on_access = True
-    root.system.cpu.dcache.prefetch_on_access = True
-    root.system.cpu.dcache.prefetch_on_pf_hit = True
+    root.system.l2cache.prefetcher = DCPTPrefetcher()
+    root.system.l2cache.prefetcher.prefetch_on_access = True
+    root.system.l2cache.prefetch_on_access = True
+    root.system.l2cache.prefetch_on_pf_hit = True
 elif options.cachec == "mysamp":
-    root.system.cpu.dcache.prefetcher = MySamp()
-    root.system.cpu.dcache.prefetcher.prefetch_on_access = True
-    root.system.cpu.dcache.prefetch_on_access = True
-    root.system.cpu.dcache.prefetch_on_pf_hit = True
+    root.system.l2cache.prefetcher = MySamp()
+    root.system.l2cache.prefetcher.prefetch_on_access = True
+    root.system.l2cache.prefetch_on_access = True
+    root.system.l2cache.prefetch_on_pf_hit = True
 elif options.cachec == "ampm":
-    root.system.cpu.dcache.prefetcher = AMPMPrefetcher()
-    root.system.cpu.dcache.prefetcher.prefetch_on_access = True
-    root.system.cpu.dcache.prefetch_on_access = True
-    root.system.cpu.dcache.prefetch_on_pf_hit = True
+    root.system.l2cache.prefetcher = AMPMPrefetcher()
+    root.system.l2cache.prefetcher.prefetch_on_access = True
+    root.system.l2cache.prefetch_on_access = True
+    root.system.l2cache.prefetch_on_pf_hit = True
 
 if options.cachec != "default":
     root.system.cpu.dcache.prefetcher.prefetch_on_access = True

@@ -192,7 +192,7 @@ class MySamplePrefetcher(QueuedPrefetcher):
     confidence_threshold = Param.Percent(50,
         "Prefetch generation confidence threshold")
     degree = Param.Int(4, "Number of prefetches to generate")
-    cache_num_blocks = Param.Int(4096, "Number of blocks in parent cache")
+    cache_num_sets = Param.Int(1, "Number of sets in parent cache")
     sampler_assoc = Param.Int(4, "Associativity of the sampler")
     sampler_entries = Param.MemorySize("128", "Number of entries of the sampler")
     pred_entries = Param.Unsigned(1024, "Number of entries of the predict table")

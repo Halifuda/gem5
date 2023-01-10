@@ -20,8 +20,19 @@ function collect_bp_stats() {
 	cat $2/$1/stats.txt | grep "Squashed" >> $2.txt	
 }
 
+function collect_cc_stats() {
+	echo "[CC] $1" >> $2.txt
+	cat $2/$1/stats.txt | grep "cpi" >> $2.txt
+	cat $2/$1/stats.txt | grep "ipc" >> $2.txt
+	cat $2/$1/stats.txt | grep "l2cache.prefetcher" >> $2.txt
+}
+
 ALLBP=("ban" "local" "p8k" "p64k" "tour" "bimode" "simple" "myp")
 BP=("local" "myp" "p8k" "simple" "tour" "bimode")
+
+ALLCC=("default" "dcp" "ampm" "spf" "mysamp")
+CC=("mysamp")
+
 
 for bp in ${BP[@]}; do
 	collect_bp_stats $bp $1

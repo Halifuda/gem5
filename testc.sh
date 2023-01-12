@@ -8,7 +8,7 @@ fi
 OUTPAR=m5out/c
 # CC: Cache Config
 ALLCC=("default" "dcp" "ampm" "spf" "mysamp")
-CC=("mysamp")
+CC=("mysamp" "spf" "ampm")
 
 SIM="build/ARM/gem5.opt"
 SCRIPT="configs/proj6/3-level.py"

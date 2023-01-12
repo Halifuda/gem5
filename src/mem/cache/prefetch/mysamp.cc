@@ -55,9 +55,12 @@ MySample::MySample(const MySamplePrefetcherParams &params)
 Addr MySample::sampleBlkShift(const Addr addr) { return addr >> lBlkSize; }
 
 bool MySample::isSampled(const Addr addr) {
+    return true; // now we try to sample all cache blocks
+    /*
     Addr parent_set = addr >> lBlkSize;
     Addr sampler_set = (addr >> (lBlkSize + sampFracBits)) << sampFracBits;
     return (sampler_set ^ parent_set) == 0;
+    */
 }
 
 void MySample::prefetch(const Addr pc, const Addr addr,
@@ -89,10 +92,16 @@ void MySample::calculatePrefetch(const PrefetchInfo &pfi,
         DPRINTF(HWPrefetch, "Ignoring request with no PC.\n");
         return;
     }
+
+    uint64_t setnum = samplerInfo.numEntries / samplerInfo.assoc;
+    uint64_t setmask = setnum - 1;
+
     Addr pf_addr = pfi.getAddr();
-    Addr sidx = sampleBlkShift(pf_addr);
+    Addr sidx = (pf_addr >> lBlkSize);
     Addr pc = pfi.getPC();
     bool is_secure = pfi.isSecure();
+
+    DPRINTF(HWPrefetch, "Prefetch Start at addr=%lx pc=%lx set=%ld secure=%d\n", pf_addr, pc, (sidx >> sampFracBits) & setmask, is_secure);
 
     if (!isSampled(pf_addr)) {
         /* not sampled address, simply predict + prefetch */
@@ -104,6 +113,8 @@ void MySample::calculatePrefetch(const PrefetchInfo &pfi,
         if (entry == nullptr) {
             /* no such entry, evict */
             entry = Sampler.findVictim(sidx);
+            DPRINTF(HWPrefetch, "Miss. Victim addr=%lx pc=%lx set=%ld\n", entry->lastAddr, entry->signature, 
+                ((entry->lastAddr >> lBlkSize) >> sampFracBits) & setmask);
             predUpdate(entry->signature, entry->lastAddr, pf_addr, false);
 
             // Insert new entry's data
@@ -111,16 +122,16 @@ void MySample::calculatePrefetch(const PrefetchInfo &pfi,
             entry->signature = pc;
             Sampler.insertEntry(sidx, is_secure, entry);        
             Sampler.accessEntry(entry);
+            DPRINTF(HWPrefetch, "New entry addr=%lx pc=%lx set=%ld\n", entry->lastAddr, entry->signature, 
+                ((entry->lastAddr >> lBlkSize) >> sampFracBits) & setmask);
             /* now entry exists, update sampler */
-            entry->signature = pc;
-            entry->lastAddr = pf_addr;
             // do not update PT
         } else {
+            // update the predict table
+            predUpdate(entry->signature, 0, 0, true);
             Sampler.accessEntry(entry);
             entry->signature = pc;
             entry->lastAddr = pf_addr;
-            // update the predict table
-            predUpdate(pc, entry->lastAddr, pf_addr, true);
         }
 
         // predict & prefetch

@@ -43,7 +43,6 @@ from m5.params import *
 from m5.proxy import *
 from m5.SimObject import *
 
-
 class HWPProbeEvent:
     def __init__(self, prefetcher, obj, *listOfNames):
         self.obj = obj
@@ -163,6 +162,10 @@ class QueuedPrefetcher(BasePrefetcher):
         that can be throttled depending on the accuracy of the prefetcher.",
     )
 
+class Lab3Hyperion(QueuedPrefetcher):
+    type = "Lab3Hyperion"
+    cxx_class = "gem5::prefetch::Lab3Hyperion"
+    cxx_header = "mem/cache/prefetch/lab3_pf.hh"
 
 class StridePrefetcherHashedSetAssociative(SetAssociative):
     type = "StridePrefetcherHashedSetAssociative"
@@ -450,7 +453,6 @@ class DeltaCorrelatingPredictionTables(SimObject):
     table_replacement_policy = Param.BaseReplacementPolicy(
         LRURP(), "Replacement policy of the table"
     )
-
 
 class DCPTPrefetcher(QueuedPrefetcher):
     type = "DCPTPrefetcher"

@@ -157,6 +157,11 @@ class BranchPredictor(SimObject):
     )
 
 
+class Lab2PerceptronBP(BranchPredictor):
+    type = "Lab2PerceptronBP"
+    cxx_class = "gem5::branch_prediction::Lab2PerceptronBP"
+    cxx_header = "cpu/pred/lab2_bp.hh"
+
 class LocalBP(BranchPredictor):
     type = "LocalBP"
     cxx_class = "gem5::branch_prediction::LocalBP"

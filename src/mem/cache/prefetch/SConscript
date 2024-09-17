@@ -29,6 +29,7 @@
 Import('*')
 
 SimObject('Prefetcher.py', sim_objects=[
+    'Lab3Hyperion',
     'BasePrefetcher', 'MultiPrefetcher', 'QueuedPrefetcher',
     'StridePrefetcherHashedSetAssociative', 'StridePrefetcher',
     'TaggedPrefetcher', 'IndirectMemoryPrefetcher', 'SignaturePathPrefetcher',
@@ -37,6 +38,7 @@ SimObject('Prefetcher.py', sim_objects=[
     'IrregularStreamBufferPrefetcher', 'SlimAMPMPrefetcher',
     'BOPPrefetcher', 'SBOOEPrefetcher', 'STeMSPrefetcher', 'PIFPrefetcher'])
 
+Source('lab3_pf.cc')
 Source('access_map_pattern_matching.cc')
 Source('base.cc')
 Source('multi.cc')

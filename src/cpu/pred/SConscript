@@ -43,6 +43,7 @@ Import('*')
 
 SimObject('BranchPredictor.py',
     sim_objects=[
+    'Lab2PerceptronBP',
     'BranchPredictor',
     'IndirectPredictor', 'SimpleIndirectPredictor',
     'BranchTargetBuffer', 'SimpleBTB',
@@ -61,6 +62,7 @@ SimObject('BranchPredictor.py',
     'MultiperspectivePerceptronTAGE8KB'],
     enums=['BranchType', 'TargetProvider'])
 
+Source('lab2_bp.cc')
 Source('bpred_unit.cc')
 Source('2bit_local.cc')
 Source('simple_indirect.cc')

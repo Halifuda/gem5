@@ -1,0 +1,16 @@
+BasedOnStyle: LLVM
+AccessModifierOffset: -4
+IndentWidth: 4
+TabWidth: 4
+AlignAfterOpenBracket: Align
+AlignConsecutiveAssignments: false
+AlignConsecutiveDeclarations: false
+FixNamespaceComments: true
+AllowShortIfStatementsOnASingleLine: true
+AllowShortBlocksOnASingleLine: false
+AllowShortFunctionsOnASingleLine: All
+AllowShortLoopsOnASingleLine: true
+BreakBeforeBraces: Attach
+NamespaceIndentation: None
+ReflowComments: true
+SortIncludes: true
